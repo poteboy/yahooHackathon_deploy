@@ -1,0 +1,27 @@
+<div class="login-modal">
+    <div class="form-container">
+        <div class="form-description">
+            <h1 class="form-header">Unlock Wallet</h1>
+            <p class="form-warning">WARNING. This is for testing.
+                Do not use your real wallet!
+                Make sure you use a wallet that is only for Devnet.
+            </p>
+        </div>
+
+
+        <form class="form-login" (submit)="login($event)" > 
+            <div class="file-container">
+                <label for="file">Open keystore JSON file </label>
+                <input type="file" id="file" (change)="handleFileInput($event.target.files)" required>
+            </div>
+            <div class="password-container">
+                <label for="password">Password </label>
+                <input type="password" id="password" (keyup)="onKey($event)" [(value)]="password" placeholder=""
+                    required>
+                <button type="submit" class="unlock-button">Unlock</button>
+                <div *ngIf="wrongPassword" for="password" class="wrong-passwod"> Wrong Password</div>
+            </div>
+        </form>
+    </div>
+    <div class="cancel" (click)="cancel()"></div>
+</div>

@@ -1,0 +1,8 @@
+<header>
+    <ul class="nav">
+        <li class="id" (mouseover)="changeText=true" (mouseout)="changeText=false"> 
+                {{ user? user.id : 'ログインしていません'}}
+        </li>
+        <li class="login"><a (click)="_loggedIn ? onLogout() : onLogin()">{{ _loggedIn ? 'logout' : 'login' }}</a></li>
+    </ul>
+</header>

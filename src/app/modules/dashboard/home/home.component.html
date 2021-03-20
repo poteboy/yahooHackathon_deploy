@@ -1,0 +1,22 @@
+
+<div class="home">
+    <div class="blockchain-image">
+        <div *ngIf="getPath === 'home' ">
+            <img *ngIf="!gettingCanvas" [src]="image" alt="">
+            <div *ngIf="gettingCanvas">Getting Canvas From Blockchain...</div>
+            <div *ngIf="!foundContract">Could not get image. Showing mock image.</div>
+            <div *ngIf="foundContract && !gettingCanvas">Showing Image from Smart Contract</div>
+        </div>
+        <div *ngIf="getPath === 'auction' ">
+            <app-change-color></app-change-color>
+        </div>
+    </div>
+    <div class="buttons">
+        <button class="action" (click)="onAuction()">
+            ピクセルを購入する
+        </button>
+        <button class="action" (click)="onChangeColor()">
+            色を変更する
+        </button>
+    </div>
+</div>

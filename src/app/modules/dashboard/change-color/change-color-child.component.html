@@ -1,0 +1,22 @@
+<div class="sketch-container">
+    <div id="file-uploader"></div>
+    <div id="enable-image"></div>
+    <div id="w-slider"></div>
+    <div id="sketch-holder"></div>
+</div>
+
+<div class="pixel-information-container">
+    <div *ngIf="ownedPixels">ピクセル数: {{ownedPixels.length}}</div>
+    <div *ngIf="updatedPixels">変換される数: {{updatedPixels.length}}</div>
+
+    <button 
+    
+    (click)="changeColor"
+    >変換</button>
+</div>
+
+<div *ngIf="showTransactionModal">
+    <button (click)="confirmTransaction">
+        Send Transaction
+    </button>
+</div>
