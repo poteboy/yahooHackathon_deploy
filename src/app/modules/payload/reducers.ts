@@ -21,17 +21,24 @@ import {
     reducer as pathReducer,
     State as pathState,
 } from './path/path.reducer';
+import {
+    initialState as imageInitialState,
+    reducer as imageReducer,
+    State as imageState,
+} from './image/image.reducer';
 
 export interface State {
     payload: payloadState;
     loginVisible: loginVisibleState;
     path: pathState;
+    image: imageState;
 }
 
 export const reducers: ActionReducerMap<State> = {
     payload: payloadReducer,
     loginVisible: loginVisibleReducer,
     path: pathReducer,
+    image: imageReducer,
 };
 
 export function getInitialState(): State {
@@ -39,6 +46,7 @@ export function getInitialState(): State {
         payload: payloadInitalState,
         loginVisible: loginVisibleInitialState,
         path: pathInitalState,
+        image: imageInitialState,
     };
 }
 

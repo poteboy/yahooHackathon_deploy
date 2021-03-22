@@ -41,10 +41,11 @@ export class DashboardComponent implements OnInit {
             if (user === undefined) {
                 if (!localStorage.getItem('user')) {
                 } else {
-                    console.log('hello')
+                    console.log('hello');
                     this.userFromStorage = JSON.parse(localStorage.getItem('user'));
                     this.store$.dispatch(userActions.add({user: this.userFromStorage}));
-                    this.store$.dispatch(payloadActions.payload({userAddress: this.userFromStorage.id, isLoggedIn: true, key: null}))
+                    this.store$.dispatch(payloadActions.payload({
+                        userAddress: this.userFromStorage.id, isLoggedIn: true, key: this.userFromStorage.password}));
                 }
             }
         });
@@ -75,9 +76,11 @@ export class DashboardComponent implements OnInit {
     }
 
     userLoggedIn(user: User): void{
+        console.log(user.password);
         const jsonSigner = JSON.stringify(user.signer);
-        this.store$.dispatch(userActions.add({user: {id: user.id,  loggedIn: true, signer: jsonSigner, account: user.account}}));
-        this.store$.dispatch(payloadActions.payload({userAddress: user.id, isLoggedIn: true, key: null}));
+        this.store$.dispatch(userActions.add(
+            {user: {id: user.id,  loggedIn: true, signer: jsonSigner, account: user.account, password: user.password}}));
+        this.store$.dispatch(payloadActions.payload({userAddress: user.id, isLoggedIn: true, key: user.password}));
         this.loggedIn$ = this.store$.select(getIsUserLoggedIn);
         this.store$.dispatch(loginVisibleActions.loginVisible({LoginModalIsVisible: false}));
         this.store$.select(getUser).subscribe(user =>

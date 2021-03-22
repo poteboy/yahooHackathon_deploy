@@ -24,6 +24,7 @@ import { AppEffects } from './app.effects';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutesModule,
     BrowserModule,
     BrowserAnimationsModule,

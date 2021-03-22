@@ -7,7 +7,7 @@ import { create } from 'node:domain';
 
 export const getState = createSelector(
     getParentState,
-    state => state.user
+    state => state.image
 );
 
 export const { getEntities, getByAddress } = createSelectors(

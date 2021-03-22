@@ -12,22 +12,30 @@ initialState as userInitialState,
 reducer as userReducer,
 State as userState
 } from './user/reducer';
+import {
+initialState as imageInitialState,
+reducer as imageReducer,
+State as imageState
+} from './image/reducer';
 
 
 export interface State {
     user: userState;
     test: testState;
+    image: imageState;
 }
 
 export const reducers: ActionReducerMap<State> = {
     user: userReducer,
     test: testReducer,
+    image: imageReducer,
 };
 
 export function getInitialState(): State {
     return {
         user: userInitialState,
         test: testInitialState,
+        image: imageInitialState,
     };
 }
 

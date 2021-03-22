@@ -10218,6 +10218,11 @@
   dependencies:
     "defaults" "^1.0.3"
 
+"web-animations-js@^2.3.2":
+  "integrity" "sha512-TOMFWtQdxzjWp8qx4DAraTWTsdhxVSiWa6NkPFSaPtZ1diKUxTn4yTix73A1euG1WbSOMMPcY51cnjTIHrGtDA=="
+  "resolved" "https://registry.npmjs.org/web-animations-js/-/web-animations-js-2.3.2.tgz"
+  "version" "2.3.2"
+
 "webdriver-js-extender@2.1.0":
   "integrity" "sha512-lcUKrjbBfCK6MNsh7xaY2UAUmZwe+/ib03AjVOpFobX4O7+83BUveSrLfU0Qsyb1DaKJdQRbuU+kM9aZ6QUhiQ=="
   "resolved" "https://registry.npmjs.org/webdriver-js-extender/-/webdriver-js-extender-2.1.0.tgz"

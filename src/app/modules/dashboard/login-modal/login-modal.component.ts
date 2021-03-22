@@ -1,6 +1,7 @@
 import { ReadVarExpr } from '@angular/compiler';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { User } from 'src/app/contract-interface/user';
+// import { User } from 'src/app/contract-interface/user';
 
 @Component({
   selector: 'app-login-modal',
@@ -45,8 +46,7 @@ export class LoginModalComponent implements OnInit {
     const fileReader = new FileReader();
     fileReader.readAsText(this.file);
     fileReader.onload = (e) => {
-      const JSONBuffer = JSON.parse(fileReader.result.toString());
-      const user = User.Login(JSONBuffer, this.password);
+      const user = User.Login(fileReader.result.toString(), this.password);
       if (!user.isLoggedIn) {
         console.log('wrong password');
         this.password = '';

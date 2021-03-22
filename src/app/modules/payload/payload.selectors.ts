@@ -27,4 +27,11 @@ export const getUser = createSelector(
     },
 );
 
+export const getSigner = createSelector(
+    getUser,
+    state => {
+        JSON.parse(state.signer)
+    }
+)
+
 

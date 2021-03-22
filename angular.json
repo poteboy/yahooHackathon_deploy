@@ -120,7 +120,7 @@
             "production": {
               "devServerTarget": "hackathon:serve:production"
             }
-          }        
+          }
         },
           "deploy": {
             "builder": "@netlify-builder/deploy:deploy",
