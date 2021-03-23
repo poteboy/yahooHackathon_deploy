@@ -1,37 +1,77 @@
-<div class="auction-container"> 
-    
+<div class="auction-container">
+
     <div class="sketch-container">
         <div id="sketch-holder">
             <div class="status" *ngIf="loadingStateMessage && loadingStateMessage !==''">{{loadingStateMessage}}</div>
         </div>
     </div>
 
-    <button (click)="showLoginModal(true)">login</button>
-    <div *ngIf="currentAuction" class="auction-info">
-        <div *ngIf="user && currentAuction.ownerAddress === user.account.address.bech32()">You own this auction</div>
-        <div>Pixel Id: {{currentAuction.pixelId}}</div>
-        <div>Starting Price: {{currentAuction.startingPrice}} XeGLD</div>
-        <div>Ending Price: {{currentAuction.endingPrice}} XeGLD</div>
-        <div>Current Bid: {{currentAuction.currentBid}} XeGLD</div>
-        <div>Deadline: {{currentAuction.deadlineString}}</div>
-        <div *ngIf="currentAuction.currentWinnerAddress">Current Winner: {{currentAuction.currentWinnerAddress}}</div>
-    </div>
 
-    <form class="auction-form" (submit)="$event.preventDefault()">
-        <div class="bid-amount-container">
-            <label for="bid-amount">Bid: </label>
-            <input type="text" (keyup)="onKey($event)" [(value)]="bidAmount" placeholder="enter bid amount" required>
-            <button type="submit" class="bid-button" (click)="createAuctionTransaction()">Place Bid</button>
+
+    <div class="auction-info-container">
+        <div class="sell-buy">
+            <button class="option buy" *ngIf="isSelling" (click)="changeMode('buy')">Buy</button>
+            <button class="option buy-inactive" *ngIf="!isSelling" disabled>Buy</button>
+
+            <button class="option sell-inactive" *ngIf="ownedPixels.length===0" disabled>Can't Sell</button>
+            <button class="option sell" *ngIf="!isSelling && ownedPixels.length!==0" (click)="changeMode('sell')">Sell</button>
+            <button class="option sell-inactive" *ngIf="isSelling" disabled>Sell</button>
         </div>
-    </form>
-    <div *ngIf="transactionModalIsVisible">
-        <button (click)="confirmTransaction()">
-            Send Transaction
-        </button>
-    </div>
 
-    <div *ngIf="loginModalIsVisible">
-        <app-login-modal (cancelEmitter)="showLoginModal(false)" (loginEmitter)="userLoggedIn($event)">
-        </app-login-modal>
+        <div *ngIf="!isSelling">
+            <div *ngIf="currentAuction" class="auction-info">
+                <div *ngIf="user && currentAuction.ownerAddress === user.account.address.bech32()">You own this auction
+                </div>
+                <div class="auction-spec">Pixel Id: <div class="auction-val">{{currentAuction.pixelId}}</div></div>
+                <div class="auction-spec">Starting Price: <div class="auction-val">{{currentAuction.startingPrice}} XeGLD</div></div>
+                <div class="auction-spec">Ending Price: <div class="auction-val">{{currentAuction.endingPrice}} XeGLD</div></div>
+                <div class="auction-spec">Current Bid: <div class="auction-val">{{currentAuction.currentBid}} XeGLD</div></div>
+                <div class="auction-spec">Deadline: <div class="auction-val">{{currentAuction.deadlineString}}</div></div>
+                <div class="auction-spec" *ngIf="currentAuction.currentWinnerAddress">Current Winner: {{currentAuction.currentWinnerAddress}}
+                </div>
+                <form class="auction-form" (submit)="$event.preventDefault()">
+                    <div class="bid-amount-container">
+                        <label for="bid-amount">Bid: </label>
+                        <input type="text" (keyup)="onKey($event)" [(value)]="bidAmount" placeholder="enter bid amount"
+                            required>
+                        <button type="submit" class="bid-button" (click)="createAuctionTransaction()">Place Bid</button>
+                    </div>
+                </form>
+            </div>
+            <div *ngIf="!currentAuction" class="auction-info">
+                Select an active auction.
+            </div>
+        </div>
+
+        <div *ngIf="isSelling">
+            <div *ngIf="sellId" class="auction-info">
+                <div>Pixel Id: {{sellId}}</div>
+                <form class='sell-form' (submit)="$event.preventDefault()">
+                    <label for="starting-price">Starting Price</label>
+                    <input type="text" name="starting-price" (keyup)="onKey($event)" [(value)]="startingPrice">
+                    
+                    <label for="ending-price">Ending Price</label>
+                    <input type="text" name="ending-price" (keyup)="onKey($event)" [(value)]="endingPrice">
+
+                    <label for="deadline">Deadline (Hours)</label>
+                    <input type="text" name="deadline" (keyup)="onKey($event)" [(value)]="deadlineH">
+
+                    <button type="submit" class="bid-button" (click)="createSellAuctionTransaction()">Place Auction</button>
+                </form>
+            </div>
+        </div>
+        <div class="owned-pixel">
+            所有ピクセル数: {{ownedPixels.length}}
+        </div>
+
+        <div *ngIf="transactionModalIsVisible">
+            <app-transaction-modal 
+            (cancelEmitter)="showTransactionModal(false)" 
+            (confirmEmitter)="confirmTransaction()"
+                [transactionStatus]="loadingStateMessage" 
+                [transactionInfo] = "transactionInfo"
+                [isTransacting] = "transacting"
+                [complete] = "complete"
+                ></app-transaction-modal>
+        </div>
     </div>
-</div>

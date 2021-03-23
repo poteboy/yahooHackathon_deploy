@@ -6,7 +6,7 @@ const actionCreator = actionCreatorFactory();
 
 export interface Images {
     id: string;
-    homeImage: SafeUrl | null;
+    homeImage?: number[][];
 }
 
 export const actions = {

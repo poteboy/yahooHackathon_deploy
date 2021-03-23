@@ -25,6 +25,7 @@ import { NetworkConfig } from '@elrondnetwork/erdjs/out';
 import { getLoginModalIsVisible } from 'src/app/modules/payload/login/login-visible.selectors';
 import { Account, UserSigner } from '@elrondnetwork/erdjs';
 
+
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
@@ -76,6 +77,7 @@ export class DashboardComponent implements OnInit {
     }
 
     userLoggedIn(user: User): void{
+        // user.keystoreFile 
         console.log(user.password);
         const jsonSigner = JSON.stringify(user.signer);
         this.store$.dispatch(userActions.add(
@@ -95,7 +97,7 @@ export class DashboardComponent implements OnInit {
         private actions$: Actions,
         private store$: Store<any>,
         private sanitizer: DomSanitizer,
-        private router: Router,
+        private router: Router
         ) { }
 
 }

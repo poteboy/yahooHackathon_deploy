@@ -122,16 +122,16 @@
             }
           }
         },
-          "deploy": {
-            "builder": "@netlify-builder/deploy:deploy",
-            "options": {
-              "outputPath": "dist/hackathon",
-              "netlifyToken": "",
-              "siteId": "43fbfaac-ced8-4d63-896a-1ff0c46edf9d"
-            }
+        "deploy": {
+          "builder": "@netlify-builder/deploy:deploy",
+          "options": {
+            "outputPath": "dist/hackathon",
+            "netlifyToken": "",
+            "siteId": "43fbfaac-ced8-4d63-896a-1ff0c46edf9d"
           }
         }
       }
-    },
+    }
+  },
   "defaultProject": "hackathon"
 }

@@ -4,7 +4,7 @@ import { SafeUrl } from '@angular/platform-browser';
 
 export interface State {
     id: string;
-    homeImage: SafeUrl;
+    homeImage: number[][];
 }
 
 export const initialState = {

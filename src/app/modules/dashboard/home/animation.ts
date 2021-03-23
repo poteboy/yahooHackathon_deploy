@@ -43,13 +43,13 @@ export const HomeAnimation = trigger('pathSelect', [
 
     })),
     transition('home <=> auction', [
-        animate('1s')
+        animate('0.5s')
     ]),
     transition('home <=> changeColor', [
-        animate('1s')
+        animate('0.5s')
     ]),
     transition('auction <=> changeColor', [
-        animate('1s')
+        animate('0.5s')
     ])
 
 

@@ -1,5 +1,7 @@
+import { Auction } from './auction';
+
 export interface Image {
     id: string;
-    homeImage: any | null;
-    auctionImage: any | null;
+    homeImage?: number[][];
+    auctionImage?: Auction;
 }

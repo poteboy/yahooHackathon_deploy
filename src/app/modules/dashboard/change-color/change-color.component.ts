@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { User } from 'src/app/contract-interface/user';
 import { getUser, getIsUserLoggedIn, getUserAddress } from '../../payload';
 import { actions as pathActions } from '../../payload/path/path.actions';
+import { getHomeImage } from 'src/app/modules/payload/image/image.selectors';
 
 const CANVAS_CONTRACT_ADDRESS = environment.contractAddress;
 const PROXY_PROVIDER_ENDPOINT = environment.proxyProviderEndpoint;
@@ -21,10 +22,18 @@ const PROXY_PROVIDER_ENDPOINT = environment.proxyProviderEndpoint;
 
 export class ChangeColorComponent implements OnInit {
 
-  public user$ = this.store$.select(getUser);
-
+  public image$: Observable<any> = this.store$.select(getHomeImage);
+  public user$: Observable<any> = this.store$.select(getUser);
+  public user;
+  public image: number[][];
   ngOnInit(): void {
     this.store$.dispatch(pathActions.path({path: 'changeColor'}));
+    this.store$.select(getHomeImage).subscribe(image => {
+      this.image = image;
+    });
+    this.store$.select(getUser).subscribe(user => {
+      this.user = User.Login(user.keystoreFile, user.password);
+    });
   }
 
   constructor(
@@ -33,33 +42,3 @@ export class ChangeColorComponent implements OnInit {
   ) { }
 }
 
-
-
-
-
-//   const proxyProvider = new ProxyProvider('http://localhost:7950', 1000000);
-  //   try {
-  //     await NetworkConfig.getDefault().sync(proxyProvider);
-  //   } catch (e) {
-  //     console.log("Failed to get network config.");
-  //   }
-
-
-  //   try {
-  //     this.canvasContract = new CanvasContract(
-  //       'erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts', //smart contract address
-  //       proxyProvider
-  //     );
-  //   } catch (e) {
-  //     this.canvasContract = new CanvasContract();
-
-  //   }
-  //   if (this.canvasContract.proxyProvider) {
-  //     this.foundContract = true;
-  //   } else {
-  //     this.foundContract = false;
-  //   }
-  //   if(!this.foundContract)return;
-  //   let user;
-  //   this.store$.select(getUserAddress).subscribe(x => {
-  //     this.address = x;

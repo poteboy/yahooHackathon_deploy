@@ -47,7 +47,6 @@ export class HeaderComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {}
 
     onLogin(): void {
-        console.log(this._loggedIn)
         if (this._loggedIn === true) {
             this.logout.emit();
         }
@@ -57,6 +56,12 @@ export class HeaderComponent implements OnInit, OnChanges {
     onLogout(): void {
         // this.store$.dispatch(userActions.remove({id: this.user.id}))
         this.logout.emit();
+    }
+
+    get shortUserId(): string {
+        const a = this.user.id.slice(0, 5);
+        const b = this.user.id.slice(-5, -1);
+        return 'ID: ' + a + '.....' + b;
     }
 
     constructor(private actions$: Actions, private store$: Store<any>) {}

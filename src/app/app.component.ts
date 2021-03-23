@@ -18,18 +18,7 @@ import { User } from './model/entity';
 })
 export class AppComponent implements OnInit {
 
-  // テスト用。後で消す。
-  public userAddress: string;
-  public user$: Observable<any>;
-
-
   ngOnInit(): void {}
 
   constructor(private actions$: Actions, private store$: Store<any>, private router: Router) {}
-
-  prepareRoute(outlet: RouterOutlet): void {
-    return (
-      outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation
-    );
-  }
 }

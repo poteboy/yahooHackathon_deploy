@@ -6,4 +6,5 @@ export interface User {
     signer?: ISigner | string;
     loggedIn?: boolean;
     password?: string;
+    keystoreFile?: any;
 }

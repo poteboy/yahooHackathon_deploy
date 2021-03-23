@@ -1,6 +1,15 @@
+.auction-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
 
 .sketch-container{
-    margin-top: 10vh;
+    grid-column: 2;
+    margin-top: 7vh;
     display:grid;
     justify-items: center;
     align-items: center;
@@ -12,11 +21,14 @@
     border: solid black 1px;
     box-shadow: 0 10px 15px 0 rgba(0, 0, 0, .2);
 }
-
+.auction-info{
+    display: grid;
+    row-gap: 5px;
+}
 .status{
-    color: rgb(56, 56, 80);
+    color: rgb(94, 50, 0);
     position: absolute;
-    z-index: 1;
+    z-index: 233;
     // top:0;
     // left: 0;
     width: 500px;
@@ -24,5 +36,68 @@
     display: grid;
     justify-content: center;
     align-content: center;
-    background: rgba(234, 253, 255, 0.137);
+    background: rgba(245, 254, 255, 0.664);
+    font-family: 'Courier New', Courier, monospace;
+}
+.bid-button{
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 8px 4px;
+    cursor: pointer;
+    color: rgb(29, 29, 29);
+    background-color: rgb(255, 195, 30);  
+}
+.sell-buy{
+    padding: 5px;
+}
+.option{
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.buy{
+    color: rgb(255, 255, 255);
+    background-color: rgb(106, 189, 111);  
+}
+.buy-inactive{
+    color: rgb(153, 153, 153);
+    background-color: rgb(66, 85, 67);  
+}
+.sell{
+    color: rgb(255, 255, 255);
+    background-color: rgb(187, 70, 70);
+}
+.sell-inactive{
+    color: rgb(153, 153, 153);
+    background-color: rgb(109, 92, 92);
+}
+.auction-info-container{
+    margin-top: 7vh;
+    grid-column: 3;
+    width: 250px;
+    height: 400px;
+    font-family: 'Courier New', Courier, monospace;
+    border: rgb(188, 199, 212) solid 2px;
+    border-radius: 25px;
+    padding: 25px;
+}
+.auction-spec{
+    display: grid;
+    width: 100%;
+
+}
+.auction-val{
+    justify-self: right;
+}
+.owned-pixel{
+    align-self: end;
 }

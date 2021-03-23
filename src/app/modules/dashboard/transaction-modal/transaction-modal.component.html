@@ -1,1 +1,17 @@
-<p>transaction-modal works!</p>
+<div class="transaction-container">
+    <div class="transaction-modal">
+        <div class="transaction-header">Transaction</div>
+        <div class="transaction-info">
+            <div class="transaction-function">Calling: "{{transactionInfo.callFunction}}"</div>
+            <div class="transaction-value">Value: {{transactionInfo.value}} XeGLD</div>
+            <div class="transaction-status">{{transactionStatus}}</div>
+        </div>
+        <div class="button-container">
+            
+            <button class="confirm-btn" *ngIf="!isTransacting && !complete" (click)="confirm()">Confirm</button>
+            <button class="confirm-btn processing" *ngIf="isTransacting" disabled>Processing...</button>
+            <button class="confirm-btn done" *ngIf="complete" (click)="cancel()">Done</button>
+            <button class="cancel-btn" *ngIf="!complete"(click)="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>
