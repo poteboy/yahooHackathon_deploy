@@ -81,7 +81,13 @@ export class DashboardComponent implements OnInit {
         console.log(user.password);
         const jsonSigner = JSON.stringify(user.signer);
         this.store$.dispatch(userActions.add(
-            {user: {id: user.id,  loggedIn: true, signer: jsonSigner, account: user.account, password: user.password}}));
+            {user: {id: user.id,
+                loggedIn: true,
+                signer: jsonSigner,
+                account: user.account,
+                password: user.password,
+                keystoreFile: user.keystoreFile,
+            }}));
         this.store$.dispatch(payloadActions.payload({userAddress: user.id, isLoggedIn: true, key: user.password}));
         this.loggedIn$ = this.store$.select(getIsUserLoggedIn);
         this.store$.dispatch(loginVisibleActions.loginVisible({LoginModalIsVisible: false}));
