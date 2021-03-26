@@ -17,6 +17,7 @@ export class TransactionModalComponent implements OnInit {
   @Input() transactionStatus: string;
   @Input() isTransacting: boolean;
   @Input() complete: boolean;
+  @Input() transactionLink: string;
   @Output() confirmEmitter = new EventEmitter();
   @Output() cancelEmitter = new EventEmitter();
   constructor() { }

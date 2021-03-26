@@ -4,7 +4,9 @@
         <div class="transaction-info">
             <div class="transaction-function">Calling: "{{transactionInfo.callFunction}}"</div>
             <div class="transaction-value">Value: {{transactionInfo.value}} XeGLD</div>
-            <div class="transaction-status">{{transactionStatus}}</div>
+            <div *ngIf="!complete" class="transaction-status">{{transactionStatus}}</div>
+            <div *ngIf="complete" class="transaction-status">Complete</div>
+            <a *ngIf="transactionLink !==''" class="transaction-link" [href]="transactionLink" target="_blank">track</a>
         </div>
         <div class="button-container">
             

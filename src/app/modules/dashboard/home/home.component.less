@@ -15,18 +15,27 @@
     //     border-radius: 40px;
     //     box-shadow: 0 10px 15px 0 rgba(0, 0, 0, .2);
     // }
+    .page-header{
+        top: 0;
+        position: absolute;
+        margin-top: 10vh;
+        margin-left: 25px;
+        transform: translateX(-150px);
+        font-size: 32px;
+        color: rgb(35, 46, 46);
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
 
     .buttons {
         margin: auto 0;
         text-align: center;
         padding-top: 20px;
-
-
         .action {
             margin: 0px 16px;
             width: 10%;
             -webkit-box-align: center;
-            align-items: center;
+            // align-items: center;
             border: 0px;
             border-radius: 16px;
             box-shadow: 0 10px 15px 0 rgba(0, 0, 0, .2);
@@ -43,40 +52,19 @@
             outline: 0px;
             transition: background-color 0.2s ease 0s;
             height: 48px;
-            padding: 0px 24px;
+            padding: 12px 24px 6px;
             background-color: rgb(31, 199, 212);
             color: white;
         }
         .action:hover {
             opacity: 0.5;
         }
+
+        .loading{
+            background-color: rgb(66, 106, 109);
+            color: rgb(156, 156, 156);
+            transition: none;
+        }
     }
-    
-    .sketch-container{
-        margin-top: 5vh;
-        display:grid;
-        justify-items: center;
-        align-items: center;
-    }
-    
-    #sketch-holder{
-        width: 500px;
-        height:500px;
-        border: solid black 1px;
-        box-shadow: 0 10px 15px 0 rgba(0, 0, 0, .2);
-    }
-    
-    .status{
-        position: absolute;
-        z-index: 1;
-        // top:0;
-        // left: 0;
-        width: 500px;
-        height: 500px;
-        display: grid;
-        justify-content: center;
-        align-content: center;
-        color: coral;
-        font-family: 'Courier New', Courier, monospace;
-    }
+
 }

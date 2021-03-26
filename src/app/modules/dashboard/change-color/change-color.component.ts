@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Address, NetworkConfig, ProxyProvider, Transaction } from '@elrondnetwork/erdjs/out';
 import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -21,7 +21,7 @@ const PROXY_PROVIDER_ENDPOINT = environment.proxyProviderEndpoint;
 })
 
 export class ChangeColorComponent implements OnInit {
-
+  @Output() loadEmitter = new EventEmitter();
   public image$: Observable<any> = this.store$.select(getHomeImage);
   public user$: Observable<any> = this.store$.select(getUser);
   public user;
@@ -40,5 +40,9 @@ export class ChangeColorComponent implements OnInit {
     private actions$: Actions,
     private store$: Store<any>
   ) { }
+
+  onLoad(isLoading: boolean): void{
+    this.loadEmitter.emit(isLoading);
+  }
 }
 

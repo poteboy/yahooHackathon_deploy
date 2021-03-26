@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Account, Address, NetworkConfig, ProxyProvider, Transaction, TransactionOnNetwork, UserSigner } from '@elrondnetwork/erdjs/out';
 import { Actions } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
@@ -13,6 +13,7 @@ import { getUser, getIsUserLoggedIn, getUserAddress } from '../../payload';
 import { ISigner } from '@elrondnetwork/erdjs/out/interface';
 import { BooleanValue } from '@elrondnetwork/erdjs/out/smartcontracts/typesystem';
 import { getHomeImage } from '../../payload/image/image.selectors';
+import { TransactionInfo } from '../transaction-modal/transaction-modal.component';
 // import { User } from 'src/app/contract-interface/user';
 // let a: User
 const CANVAS_CONTRACT_ADDRESS = environment.contractAddress;
@@ -25,6 +26,7 @@ const PROXY_PROVIDER_ENDPOINT = environment.proxyProviderEndpoint;
 export class ChangeColorChildComponent implements OnInit {
   @Input() image: number[][];
   @Input() user: User;
+  @Output() loadingEmitter = new EventEmitter();
   public pCanvas: any;
   public foundContract: boolean;
   public ownedPixels: number[];
@@ -35,10 +37,15 @@ export class ChangeColorChildComponent implements OnInit {
   public updatedPixelsSum: number;
   public canvasRGB: number[][];
   public transactionCallBacks: Transaction[];
-  public showTransactionModal: boolean;
+  public transactionModalIsVisible: boolean;
   public sendingTransaction: boolean;
   public loginModalIsVisible: boolean;
   public loadingStateMessage = '';
+  public complete = false;
+  public transactionLink = '';
+  public transacting = false;
+  public transactionInfo: TransactionInfo;
+  public reDrawCanvas = false;
   private canvasContract: CanvasContract;
   private proxyProvider: ProxyProvider;
   private networkConfig: NetworkConfig;
@@ -53,16 +60,8 @@ export class ChangeColorChildComponent implements OnInit {
     private store$: Store<any>
   ) { }
 
-  // showLoginModal(show: boolean): void {
-  //   this.loginModalIsVisible = show;
-  // }
-  // async userLoggedIn(user: User): Promise<void> {
-  //   this.user = user;
-  //   this.loginModalIsVisible = false;
-  //   await this.loadContractCanvas();
-  // }
-
   async loadContractCanvas(): Promise<void> {
+    this.loadingEmitter.emit(true);
     this.updatedPixels = [];
     this.loadingStateMessage = 'Connecting to Proxy...';
     this.proxyProvider = new ProxyProvider(PROXY_PROVIDER_ENDPOINT, 100000);
@@ -73,7 +72,6 @@ export class ChangeColorChildComponent implements OnInit {
     this.canvasContract = new CanvasContract(CANVAS_CONTRACT_ADDRESS, this.proxyProvider, this.user, this.networkConfig);
 
     try {
-      // console.log(this.user.account.address);
       this.loadingStateMessage = 'Getting User-Owned pixel ids...';
       this.ownedPixels = await this.canvasContract.getOwnedPixels(
         this.user.account.address,
@@ -82,13 +80,6 @@ export class ChangeColorChildComponent implements OnInit {
         10000
       );
       this.loadingStateMessage = 'Getting User-Owned pixel colors...';
-      // const ownedPixelArray = await this.canvasContract.getOwnedPixelsColor(
-      //   this.user.account.address,
-      //   1,
-      //   1,
-      //   1000,
-      //   this.ownedPixels.length
-      // );
       let pixelArray;
       this.ownedPixelRGB = [];
       let ownedPixelId = 1;
@@ -136,9 +127,17 @@ export class ChangeColorChildComponent implements OnInit {
     this.renderCanvas(500, 500, 0.5);
     this.updatedPixels = this.ownedPixels.map(() => false);
     console.log(this.ownedPixelRGB.length);
+    if (this.ownedPixels.length === 0){
+      this.loadingStateMessage = 'You do not own any pixels';
+    }
     this.loadingStateMessage = '';
+    this.loadingEmitter.emit(false);
+  }
+  showTransactionModal($event): void{
+    this.transactionModalIsVisible = $event;
   }
   async changeColorTransaction(): Promise<void> {
+    this.transactionLink = '';
     if (this.updatedPixelsSum > 0) {
       const updatedPixelArray = this.ownedPixels.filter((el, idx) => {
         return this.updatedPixels[idx] === true;
@@ -164,9 +163,15 @@ export class ChangeColorChildComponent implements OnInit {
             gs.slice(i * limit, (i + 1) * limit),
             bs.slice(i * limit, (i + 1) * limit));
         }
-        this.showTransactionModal = true;
+        this.transactionModalIsVisible = true;
         console.log('Successful transaction created.');
+        this.transactionInfo = {
+          callFunction: 'changeBatchPixelColor',
+          value: 0,
+        };
+        this.loadingStateMessage = 'Pending Confirmation';
       } catch (e) {
+        this.transactionModalIsVisible = false;
         console.log('Failed to create transaction');
         console.log(e);
       }
@@ -174,14 +179,19 @@ export class ChangeColorChildComponent implements OnInit {
   }
 
   async confirmTransaction(): Promise<void> {
-    this.loadingStateMessage = 'Updating colors. This may time a while';
+    if (this.transacting){
+      return;
+    }else{
+      this.transacting = true;
+      this.complete = false;
+    }
     console.log('Sending transaction');
-
+    this.loadingStateMessage = 'preparing transaction...';
     await NetworkConfig.getDefault().sync(this.proxyProvider);
 
     this.sendingTransaction = true;
     await this.user.account.sync(this.proxyProvider);
-
+    this.loadingStateMessage = 'signing transaction...';
     for (const transactionCallBack of this.transactionCallBacks) {
 
       transactionCallBack.setNonce(this.user.account.nonce);
@@ -190,17 +200,34 @@ export class ChangeColorChildComponent implements OnInit {
 
       this.user.account.incrementNonce();
     }
-
+    this.loadingStateMessage = 'Updating colors.';
+    const n = this.transactionCallBacks.length;
+    let p = 0;
     for (const transactionCallBack of this.transactionCallBacks) {
       const hash = await transactionCallBack.send(this.proxyProvider);
+      this.transactionLink = 'https://devnet-explorer.elrond.com/transactions/' + hash.toString();
+      this.loadingStateMessage = `Updating colors ${Math.round((p / n) * 100)}%`;
+      p++;
     }
 
     await this.transactionCallBacks[this.transactionCallBacks.length - 1].awaitExecuted(this.proxyProvider);
     this.loadingStateMessage = 'Done! Reload canvas.';
-    console.log('Done');
+    this.transacting = false;
+    this.complete = true;
   }
 
-
+  cancelColor(): void{
+    this.updatedPixels = this.ownedPixels.map(() => false);
+    this.canvasRGB = this.image;
+    this.ownedPixelRGB = [];
+    for (let i = 1; i <= this.canvasRGB.length; i++){
+      if (this.ownedPixels.includes(i)){
+        const rgb = this.canvasRGB[i - 1];
+        this.ownedPixelRGB.push([rgb[0], rgb[1], rgb[2]]);
+      }
+    }
+    this.reDrawCanvas = true;
+  }
 
   renderCanvas(width: number, height: number, strokeWeight: number): void {
     const sketch = s => {
@@ -226,6 +253,7 @@ export class ChangeColorChildComponent implements OnInit {
       };
 
       const reDraw = () => {
+        pGraphic.clear();
         for (let i = 1; i <= totalPixels; i++) {
           if (this.ownedPixels.includes(i)) {
             pGraphic.stroke(0, 0, 0, 60);
@@ -284,7 +312,10 @@ export class ChangeColorChildComponent implements OnInit {
 
       s.draw = () => {
         s.background(255);
-
+        if (this.reDrawCanvas){
+          reDraw();
+          this.reDrawCanvas = false;
+        }
         s.image(pGraphic, 0, 0);
         if (img && showImage) {
           const imgW = img.width * sliderSize.value() / 100;
@@ -300,6 +331,7 @@ export class ChangeColorChildComponent implements OnInit {
         }
       };
       s.mouseClicked = () => {
+        if (this.transactionModalIsVisible) { return; }
         if (s.mouseX <= 0 || s.mouseY <= 0) { return; }
         if (img) {
           // image is setting color

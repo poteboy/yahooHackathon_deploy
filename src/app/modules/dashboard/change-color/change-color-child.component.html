@@ -1,29 +1,32 @@
-
-
-<div class="sketch-container">
-    <div id="file-uploader"></div>
-    <div id="enable-image"></div>
-    <div id="w-slider"></div>
-    <div id="sketch-holder">
-        <div class="status" *ngIf="loadingStateMessage && loadingStateMessage !==''">{{loadingStateMessage}}</div>
+<div class="change-color-container">
+    <div class="sketch-container">
+        <div id="file-uploader"></div>
+        <div id="enable-image"></div>
+        <div id="w-slider"></div>
+        <div id="sketch-holder">
+            <div class="status" *ngIf="loadingStateMessage && loadingStateMessage !==''">{{loadingStateMessage}}</div>
+        </div>
     </div>
-</div>
-<!-- <button (click)="showLoginModal(true)">login</button> -->
-<div class="pixel-information-container">
-    <div *ngIf="ownedPixels">所有ピクセル数: {{ownedPixels.length}}</div>
-    <div *ngIf="updatedPixels">変換される数: {{updatedPixelsSum}}</div>
+    <!-- <button (click)="showLoginModal(true)">login</button> -->
+    <div class="pixel-information-container">
+        <div *ngIf="ownedPixels">所有ピクセル数: {{ownedPixels.length}}</div>
+        <div *ngIf="updatedPixels">変換される数: {{updatedPixelsSum}}</div>
 
-    <button 
-    (click)="changeColorTransaction()"
-    >変換</button>
+        <button class="btn" (click)="changeColorTransaction()" *ngIf="updatedPixelsSum>0">変換</button>
+        <button class="btn cancel" (click)="cancelColor()" *ngIf="updatedPixelsSum>0">リセット</button>
+    </div>
+
 </div>
 
-<div *ngIf="showTransactionModal">
+<div *ngIf="transactionModalIsVisible">
     <app-transaction-modal 
-       (cancelEmitter)="showTransactionModal(false)"
-       (confirmEmitter)="confirmTransaction()"
-       [transactionStatus] = "loadingStateMessage" 
-       ></app-transaction-modal>
+    (cancelEmitter)="showTransactionModal(false)" 
+    (confirmEmitter)="confirmTransaction()"
+    [transactionStatus]="loadingStateMessage" 
+    [transactionInfo]="transactionInfo" 
+    [isTransacting]="transacting"
+    [complete]="complete" 
+    [transactionLink]="transactionLink"></app-transaction-modal>
 </div>
 
 <div *ngIf="loginModalIsVisible">

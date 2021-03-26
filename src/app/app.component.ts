@@ -10,6 +10,7 @@ import { actions as payloadActions } from 'src/app/modules/payload/payload.actio
 // import { actions as loginVisibleActions } from 'src/app/modules/payload/login/login-visible.actions';
 import { getUser } from 'src/app/modules/payload/payload.selectors';
 import { User } from './model/entity';
+import crypto from 'crypto-js';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,11 @@ import { User } from './model/entity';
 })
 export class AppComponent implements OnInit {
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const encryptedJson = crypto.AES.encrypt('aaaavvvv', 'k').toString();
+    const decryptedJson = crypto.AES.decrypt(encryptedJson, 'k').toString(crypto.enc.Utf8);
+    console.log(decryptedJson.toString());
+  }
 
   constructor(private actions$: Actions, private store$: Store<any>, private router: Router) {}
 }
