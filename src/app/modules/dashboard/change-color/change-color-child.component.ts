@@ -46,6 +46,7 @@ export class ChangeColorChildComponent implements OnInit {
   public transacting = false;
   public transactionInfo: TransactionInfo;
   public reDrawCanvas = false;
+  public userBalance: number;
   private canvasContract: CanvasContract;
   private proxyProvider: ProxyProvider;
   private networkConfig: NetworkConfig;
@@ -53,12 +54,18 @@ export class ChangeColorChildComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadContractCanvas();
+    
   }
 
   constructor(
     private actions$: Actions,
     private store$: Store<any>
   ) { }
+
+  async updateBalance(): Promise<void>{
+    await this.user.account.sync(this.proxyProvider);
+    this.userBalance = Math.round(parseFloat(this.user.account.balance.toDenominated())*1000)/1000;
+  }
 
   async loadContractCanvas(): Promise<void> {
     this.loadingEmitter.emit(true);
@@ -69,6 +76,7 @@ export class ChangeColorChildComponent implements OnInit {
     this.loadingStateMessage = 'Syncing network...';
     // this.user = this.store$.select(getUser); // ここにユーザー情報
     this.loadingStateMessage = 'Getting Contract...';
+    await this.updateBalance();
     this.canvasContract = new CanvasContract(CANVAS_CONTRACT_ADDRESS, this.proxyProvider, this.user, this.networkConfig);
 
     try {
@@ -204,6 +212,7 @@ export class ChangeColorChildComponent implements OnInit {
     const n = this.transactionCallBacks.length;
     let p = 0;
     for (const transactionCallBack of this.transactionCallBacks) {
+      await this.updateBalance();
       const hash = await transactionCallBack.send(this.proxyProvider);
       this.transactionLink = 'https://devnet-explorer.elrond.com/transactions/' + hash.toString();
       this.loadingStateMessage = `Updating colors ${Math.round((p / n) * 100)}%`;
@@ -211,6 +220,7 @@ export class ChangeColorChildComponent implements OnInit {
     }
 
     await this.transactionCallBacks[this.transactionCallBacks.length - 1].awaitExecuted(this.proxyProvider);
+    
     this.loadingStateMessage = 'Done! Reload canvas.';
     this.transacting = false;
     this.complete = true;
@@ -256,8 +266,8 @@ export class ChangeColorChildComponent implements OnInit {
         pGraphic.clear();
         for (let i = 1; i <= totalPixels; i++) {
           if (this.ownedPixels.includes(i)) {
-            pGraphic.stroke(0, 0, 0, 60);
-            pGraphic.strokeWeight(strokeWeight);
+            pGraphic.stroke(0, 0, 0, 190);
+            pGraphic.strokeWeight(strokeWeight*1.5);
             const idx = this.ownedPixels.indexOf(i);
             try {
               const rgb = this.ownedPixelRGB[idx];
@@ -268,8 +278,8 @@ export class ChangeColorChildComponent implements OnInit {
             }
           } else {
             const rgb = this.canvasRGB[i - 1];
-            pGraphic.fill(rgb[0], rgb[1], rgb[2], 120);
-            pGraphic.stroke(0, 0, 0, 10);
+            pGraphic.fill(rgb[0], rgb[1], rgb[2], 20);
+            pGraphic.stroke(0, 0, 0, 20);
             pGraphic.strokeWeight(strokeWeight);
             pGraphic.rect((i - 1) % canvasW * wRatio, Math.floor((i - 1) / canvasW) * hRatio, wRatio, hRatio);
           }

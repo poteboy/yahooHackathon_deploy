@@ -50,7 +50,7 @@
                          >End Auction</button>
 
                         <button type="submit" 
-                        *ngIf="currentAuction.ownerAddress !== user.account.address.bech32() && currentAuction.deadline <= timeNow" 
+                        *ngIf="currentAuction.ownerAddress !== user.account.address.bech32() && currentAuction.deadline >= timeNow" 
                         class="bid-button" 
                         (click)="createAuctionTransaction()">Place Bid</button>
                         <button type = "submit" *ngIf="currentAuction.deadline <= timeNow" class="bid-button" disabled>
@@ -83,6 +83,9 @@
         </div>
         <div class="owned-pixel" *ngIf="!fetchingOwnedPixels">
             所有ピクセル数: {{ownedPixels.length}}
+        </div>
+        <div class="balance" *ngIf="userBalance">
+            バランス: {{userBalance}} XeGLD
         </div>
         <div class="owned-pixel" *ngIf="fetchingOwnedPixels">
             所有ピクセル数: loading....

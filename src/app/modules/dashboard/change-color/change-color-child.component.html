@@ -11,7 +11,9 @@
     <div class="pixel-information-container">
         <div *ngIf="ownedPixels">所有ピクセル数: {{ownedPixels.length}}</div>
         <div *ngIf="updatedPixels">変換される数: {{updatedPixelsSum}}</div>
-
+        <div class="balance" *ngIf="userBalance">
+            バランス: {{userBalance}} XeGLD
+        </div>
         <button class="btn" (click)="changeColorTransaction()" *ngIf="updatedPixelsSum>0">変換</button>
         <button class="btn cancel" (click)="cancelColor()" *ngIf="updatedPixelsSum>0">リセット</button>
     </div>
